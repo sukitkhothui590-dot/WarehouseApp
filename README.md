@@ -1,150 +1,176 @@
-# Coding Test
+# Coding Test — Warehouse Management System
 
-## Overview
+โปรเจกต์นี้เป็น Coding Test ภาษา C# ประกอบด้วยระบบจัดการคลังสินค้า และโปรเจกต์ตัวอย่างที่ Compile ผ่านแต่เกิด Runtime Error ตามโจทย์
 
-This solution contains a practical warehouse management web application and a separate C# console program that intentionally demonstrates a runtime error.
+รายละเอียดการพัฒนา ปัญหาที่พบ วิธีแก้ เหตุผลทางเทคนิค และการใช้ AI ดูได้ที่ [PROJECT-NOTES.md](PROJECT-NOTES.md)
 
-## Projects
+## โปรเจกต์ภายใน Repository
 
-### 1. Warehouse Management System
+### 1. WarehouseApp
 
-WarehouseApp is an ASP.NET Core MVC application for managing products, receiving stock, withdrawing stock, viewing current inventory, and auditing stock movement history.
+เว็บแอปพลิเคชันสำหรับจัดการสินค้า รับสินค้าเข้า เบิกสินค้าออก ดูยอดคงเหลือ และตรวจสอบประวัติการเคลื่อนไหวของสินค้า
 
-### 2. Runtime Error Demo
+### 2. RuntimeErrorDemo
 
-RuntimeErrorDemo compiles successfully, then intentionally throws System.FormatException when the user enters non-numeric input such as ABC.
+โปรแกรม Console ที่ Compile ผ่านและทำงานปกติเมื่อกรอกตัวเลข แต่ตั้งใจให้เกิด `System.FormatException` เมื่อกรอกข้อความ เช่น `ABC`
 
-## Technologies
+## เทคโนโลยี
 
 - C# / .NET 9
-- ASP.NET Core MVC and Razor Views
+- ASP.NET Core MVC และ Razor Views
 - Entity Framework Core 9
 - SQLite
-- Bootstrap and vanilla CSS/JavaScript
+- Bootstrap, CSS และ Vanilla JavaScript
 
-## Requirements
+## สิ่งที่ต้องติดตั้ง
 
-- .NET 9 SDK or later
-- No external database server is required.
+- .NET 9 SDK หรือใหม่กว่า
+- ไม่ต้องติดตั้ง Database Server เพิ่ม
 
-## How to Run
+ตรวจสอบ .NET SDK:
 
-From the repository root:
+```bash
+dotnet --version
+```
 
-    dotnet restore
-    dotnet build
+## วิธีติดตั้งและใช้งาน WarehouseApp
 
-Run the warehouse application:
+เปิด Terminal แล้วรันคำสั่ง:
 
-    cd WarehouseApp
-    dotnet run
+```bash
+git clone https://github.com/sukitkhothui590-dot/WarehouseApp.git
+cd WarehouseApp
+dotnet restore
+dotnet build
+dotnet run --project WarehouseApp/WarehouseApp.csproj
+```
 
-The application automatically applies EF Core migrations and seeds five sample products on startup. Open the URL printed by ASP.NET Core, usually http://localhost:5000 or the HTTPS URL shown in the terminal.
+จากนั้นเปิดเว็บตาม URL ที่แสดงใน Terminal โดยค่าเริ่มต้นของโปรเจกต์คือ:
 
-### Reviewer quick start
+```text
+http://localhost:5036
+```
 
-    git clone https://github.com/sukitkhothui590-dot/WarehouseApp.git
-    cd WarehouseApp
-    dotnet restore
-    dotnet run --project WarehouseApp/WarehouseApp.csproj
+ระบบจะสร้าง SQLite database, รัน EF Core migration และเพิ่มข้อมูลตัวอย่างให้อัตโนมัติเมื่อเปิดครั้งแรก
 
-The warehouse database is created automatically on first startup. No database server or manual database file is required.
+ไฟล์ฐานข้อมูลจะถูกสร้างที่:
 
-Run the runtime error demo:
+```text
+WarehouseApp/warehouse.db
+```
 
-    cd RuntimeErrorDemo
-    dotnet run
+ถ้าต้องการรันจากโฟลเดอร์โปรเจกต์โดยตรง:
 
-Enter 10 to see normal output. Enter ABC to intentionally produce System.FormatException.
+```bash
+cd WarehouseApp
+dotnet run
+```
 
-## Database
+## วิธีใช้งานหลัก
 
-WarehouseApp uses SQLite at WarehouseApp/warehouse.db. The database is created and migrated automatically on startup. The schema is defined by EF Core migrations in WarehouseApp/Data/Migrations; the database file is ignored by Git.
+1. เปิดหน้า Dashboard เพื่อดูภาพรวมสินค้าและการเคลื่อนไหวล่าสุด
+2. ไปที่ Products เพื่อดู เพิ่ม หรือแก้ไขข้อมูลสินค้า
+3. ใช้ Receive stock เพื่อรับสินค้าเข้าคลัง
+4. ใช้ Withdraw stock เพื่อเบิกสินค้าออกจากคลัง
+5. ใช้ Inventory เพื่อค้นหาสินค้าและดูสถานะ In stock, Low stock หรือ Out of stock
+6. ใช้ Transactions เพื่อตรวจสอบประวัติ Receive/Withdraw
+7. เปิด Product Details เพื่อดูข้อมูลสินค้าและประวัติของสินค้านั้นโดยเฉพาะ
 
-## Features
+หน้า Receive/Withdraw มี movement preview แสดงยอดก่อนทำรายการและยอดหลังทำรายการ พร้อมป้องกันการเบิกเกิน stock ก่อนส่งข้อมูล
 
-- Dashboard metrics: products, units in stock, received/withdrawn today, low stock, and recent transactions
-- Product create, edit, list, and detail history
-- Inventory table with code/name search and stock status
-- Receive stock and withdraw stock workflows
-- Transaction history with Receive/Withdraw and product filters
-- Server-side and browser-side validation
-- Friendly success/error feedback
-- Responsive business/admin layout
-- Local product images with a fallback asset; see IMAGE-SOURCES.md for source pages and usage notes.
+## วิธีรัน RuntimeErrorDemo
 
-## Project Structure
+จาก root ของ repository:
 
-    CodingTest/
-    ├── WarehouseApp/
-    │   ├── Controllers/
-    │   ├── Data/
-    │   │   └── Migrations/
-    │   ├── Models/
-    │   ├── Services/
-    │   ├── ViewModels/
-    │   ├── Views/
-    │   └── wwwroot/
-    ├── RuntimeErrorDemo/
-    ├── CodingTest.sln
-    └── README.md
+```bash
+dotnet run --project RuntimeErrorDemo/RuntimeErrorDemo.csproj
+```
 
-## Business Rules
+ทดลองกรอก:
 
-- Product code is unique; name and unit are required.
-- New products start with quantity 0.
-- Receive and withdraw quantities must be greater than zero.
-- A withdrawal cannot exceed current stock, so stock can never become negative.
-- Each stock change records BalanceBefore, BalanceAfter, type, quantity, note, and timestamp.
-- Product quantity update and transaction insert run in one database transaction. A failure rolls both back.
-- Product deletion is intentionally omitted so transaction history cannot be orphaned.
+```text
+10
+```
 
-## Runtime Error Explanation
+โปรแกรมจะทำงานปกติ จากนั้นทดลองกรอก:
 
-Compilation succeeds because the compiler can validate syntax, types, and that int.Parse(string) is a valid method call. It cannot know what text a user will type at runtime.
+```text
+ABC
+```
 
-When the user enters ABC, the program executes int.Parse("ABC"). Since that text is not an integer, .NET throws System.FormatException.
+ผลลัพธ์ที่คาดหวังคือ `System.FormatException` ซึ่งเป็น Runtime Error ที่ตั้งใจสร้างตามโจทย์
 
-A safe version would be:
+## ฟีเจอร์ที่ทำไว้
 
-    if (int.TryParse(input, out int quantity))
-    {
-        Console.WriteLine(quantity);
-    }
-    else
-    {
-        Console.WriteLine("Invalid quantity");
-    }
+- Dashboard metrics: จำนวนสินค้า จำนวนหน่วยคงเหลือ รับเข้า/เบิกออกวันนี้ สินค้าใกล้หมด และรายการล่าสุด
+- เพิ่ม แก้ไข ดูรายการ และดูรายละเอียดสินค้า
+- รับสินค้าเข้าและเบิกสินค้าออกพร้อมบันทึกประวัติ
+- ตรวจสอบและป้องกัน stock ติดลบ
+- ค้นหาสินค้าด้วยรหัสหรือชื่อ
+- Filter สินค้าตามสถานะ stock
+- Filter ประวัติธุรกรรมตามประเภทและสินค้า
+- Validation ฝั่ง Server และ Client
+- Success/Error feedback ที่อ่านง่าย
+- รูปสินค้า local พร้อม fallback image
+- Responsive business/admin UI สำหรับ Desktop และ Tablet
 
-That fix is deliberately not used in the main RuntimeErrorDemo, because this task requires the intentional runtime failure.
+## โครงสร้างโปรเจกต์
 
-## Testing
+```text
+CodingTest/
+├── WarehouseApp/
+│   ├── Controllers/
+│   ├── Data/Migrations/
+│   ├── Models/
+│   ├── Services/
+│   ├── ViewModels/
+│   ├── Views/
+│   └── wwwroot/
+├── RuntimeErrorDemo/
+├── CodingTest.sln
+├── README.md
+├── PROJECT-NOTES.md
+└── IMAGE-SOURCES.md
+```
 
-Build both projects:
+## Business Rules สำคัญ
 
-    dotnet build CodingTest.sln
+- Product code ต้องไม่ซ้ำ
+- ชื่อและหน่วยสินค้าห้ามว่าง
+- สินค้าใหม่เริ่มต้นด้วย stock 0
+- Receive/Withdraw ต้องมีจำนวนมากกว่า 0
+- Withdraw ห้ามเกินจำนวน stock ปัจจุบัน
+- ทุก stock movement ต้องบันทึก `BalanceBefore`, `BalanceAfter`, ประเภท จำนวน หมายเหตุ และเวลา
+- การ update stock และเพิ่ม transaction history อยู่ใน Database Transaction เดียวกัน
+- ไม่มี Delete Product เพื่อป้องกันประวัติธุรกรรมเสียความสัมพันธ์
 
-Warehouse runtime checks:
+## การทดสอบที่แนะนำ
 
-1. Create P100 / Test Product / pcs; verify stock is 0.
-2. Receive 10; verify an IN transaction with before 0, after 10.
-3. Withdraw 4; verify an OUT transaction with before 10, after 6.
-4. Withdraw 10; verify rejection, stock remains 6, and no invalid transaction is added.
-5. Submit 0 or -1; verify validation rejection.
-6. Create P100 again; verify duplicate code rejection.
-7. Check inventory, product detail, dashboard, and transaction history.
+```bash
+dotnet restore
+dotnet build CodingTest.sln
+```
 
-Runtime demo check:
+ทดสอบ WarehouseApp:
 
-    dotnet build RuntimeErrorDemo
-    dotnet run --project RuntimeErrorDemo
-    # Enter: ABC
-    # Expected: System.FormatException
+1. สร้าง `P100 / Test Product / pcs` และตรวจสอบว่า stock เป็น 0
+2. Receive จำนวน 10 ต้องได้ stock 10 และ transaction `IN`
+3. Withdraw จำนวน 4 ต้องได้ stock 6 และ transaction `OUT`
+4. Withdraw จำนวน 10 ต้องถูกปฏิเสธและ stock ต้องยังเป็น 6
+5. ทดสอบจำนวน 0 และ -1 ต้องถูกปฏิเสธ
+6. สร้าง `P100` ซ้ำ ต้องถูกปฏิเสธ
+7. ตรวจสอบ Dashboard, Inventory, Product Details และ Transactions
 
-## Design Decisions
+## ฐานข้อมูล
 
-- ASP.NET Core MVC and Razor keep the coding-test focus on C#, database access, and business logic without an unnecessary SPA.
-- SQLite makes cloning and reviewing the project easy without installing a database server.
-- EF Core migrations provide a repeatable schema and seed process.
-- InventoryService centralizes stock rules so controllers remain thin.
-- Transaction history is a first-class entity and is written atomically with the product quantity update.
+ใช้ SQLite เพื่อให้ผู้ตรวจสามารถ clone แล้ว run ได้ทันทีโดยไม่ต้องติดตั้ง SQL Server หรือ database server อื่น โดย EF Core migration จะทำงานอัตโนมัติเมื่อเริ่มแอป
+
+## รูปสินค้า
+
+รูปสินค้าถูกเก็บไว้ใน `WarehouseApp/wwwroot/images/products/` และทำงานได้แม้ไม่มี Internet ขณะรัน ระบบจะใช้ `default-product.svg` หากไม่มีรูปที่ map ไว้ ดู source pages ได้ที่ [IMAGE-SOURCES.md](IMAGE-SOURCES.md)
+
+## หมายเหตุสำหรับผู้ตรวจ
+
+- ระบบนี้ตั้งใจไม่ทำ Authentication เพราะไม่อยู่ใน requirement หลัก
+- `RuntimeErrorDemo` ตั้งใจให้เกิด Runtime Error เมื่อกรอก `ABC` ห้ามแก้เป็น `TryParse` หากต้องการตรวจตามโจทย์
+- ดูบันทึกการพัฒนาและผลการตรวจสอบได้ที่ [PROJECT-NOTES.md](PROJECT-NOTES.md)

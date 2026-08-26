@@ -80,6 +80,6 @@
 ## Repository Handoff
 
 - Published to https://github.com/sukitkhothui590-dot/WarehouseApp on branch `main`.
-- Handoff commit: `47624ab` (`feat: complete warehouse management coding test`).
+- Handoff commits: `47624ab` (`feat: complete warehouse management coding test`) and `059645c` (`docs: record repository handoff`).
 - Remote verification confirmed the repository contains the solution, README, both projects, migrations, styles, JavaScript, and local product images.
 - Git status is clean and ignored build/database artifacts are not tracked.
