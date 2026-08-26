@@ -76,3 +76,10 @@
 1. Clone/open the outputs directory as the repository root.
 2. Run dotnet restore and dotnet build.
 3. Run dotnet run --project WarehouseApp and open the URL printed by ASP.NET Core.
+
+## Repository Handoff
+
+- Published to https://github.com/sukitkhothui590-dot/WarehouseApp on branch `main`.
+- Handoff commit: `47624ab` (`feat: complete warehouse management coding test`).
+- Remote verification confirmed the repository contains the solution, README, both projects, migrations, styles, JavaScript, and local product images.
+- Git status is clean and ignored build/database artifacts are not tracked.
