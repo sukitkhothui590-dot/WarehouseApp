@@ -37,6 +37,8 @@
 - RuntimeErrorDemo/: intentional runtime error console project.
 - CodingTest.sln: solution file.
 - README.md: setup, feature, business-rule, testing, and runtime-error documentation.
+- PROJECT-NOTES.md: Thai development report covering implementation, issues, fixes, design rationale, AI usage, and verification.
+- IMAGE-SOURCES.md: local product image source pages and redistribution notes.
 - .gitignore: ignores build output, IDE files, and local SQLite files.
 
 ## Remaining Limitations
@@ -80,6 +82,6 @@
 ## Repository Handoff
 
 - Published to https://github.com/sukitkhothui590-dot/WarehouseApp on branch `main`.
-- Handoff commits: `47624ab` (`feat: complete warehouse management coding test`) and `059645c` (`docs: record repository handoff`).
+- Handoff commits: `47624ab` (`feat: complete warehouse management coding test`), `059645c` (`docs: record repository handoff`), and `b3a9c13` (`docs: add Thai setup and development notes`).
 - Remote verification confirmed the repository contains the solution, README, both projects, migrations, styles, JavaScript, and local product images.
 - Git status is clean and ignored build/database artifacts are not tracked.
