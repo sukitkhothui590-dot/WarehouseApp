@@ -1,0 +1,17 @@
+@model DashboardViewModel
+@{ ViewData["Title"] = "Dashboard"; }
+<div class="page-heading"><div><p class="eyebrow">Overview</p><h2>Inventory at a glance</h2><p class="muted">Monitor stock movement and warehouse health.</p></div><div class="heading-actions"><a class="btn btn-primary" asp-controller="Stock" asp-action="Receive">+ Receive stock</a><a class="btn btn-light" asp-controller="Stock" asp-action="Withdraw">Withdraw stock</a></div></div>
+<div class="metric-grid">
+    <div class="metric-card"><div class="metric-label">Total products</div><div class="metric-value">@Model.TotalProducts</div><div class="metric-note">Active catalog items</div></div>
+    <div class="metric-card"><div class="metric-label">Units in stock</div><div class="metric-value">@Model.TotalUnitsInStock</div><div class="metric-note">Across all products</div></div>
+    <div class="metric-card metric-in"><div class="metric-label">Received today</div><div class="metric-value">@Model.TotalReceivedToday</div><div class="metric-note">Units added</div></div>
+    <div class="metric-card metric-out"><div class="metric-label">Withdrawn today</div><div class="metric-value">@Model.TotalWithdrawnToday</div><div class="metric-note">Units dispatched</div></div>
+</div>
+<div class="dashboard-grid">
+    <section class="panel"><div class="panel-header"><div><h3>Low stock products</h3><p class="muted">Quantity at or below 5 units</p></div><a asp-controller="Inventory" asp-action="Index">View inventory →</a></div>
+        @if (Model.LowStockProducts.Count == 0) { <div class="empty-state">All products have healthy stock.</div> } else { <div class="list-stack">@foreach (var product in Model.LowStockProducts.Take(6)) { <a class="list-row" asp-controller="Products" asp-action="Details" asp-route-id="@product.Id"><img class="product-avatar" src="~/images/products/@product.ImageFileName" alt="" loading="lazy" /><span class="row-main"><strong>@product.Name</strong><small>@product.Code · @product.Unit</small></span><span class="stock-pill @(product.Quantity == 0 ? "danger" : "warning")">@product.Quantity</span></a> }</div> }
+    </section>
+    <section class="panel"><div class="panel-header"><div><h3>Recent transactions</h3><p class="muted">Latest inventory activity</p></div><a asp-controller="Transactions" asp-action="Index">View all →</a></div>
+        @if (Model.RecentTransactions.Count == 0) { <div class="empty-state">No transactions yet.</div> } else { <div class="table-responsive"><table class="table app-table"><tbody>@foreach (var item in Model.RecentTransactions.Take(6)) { <tr><td><span class="movement-icon @(item.TransactionType == TransactionType.IN ? "movement-in" : "movement-out")">@(item.TransactionType == TransactionType.IN ? "↓" : "↑")</span></td><td><strong>@item.Product.Name</strong><small class="d-block muted">@item.CreatedAt.ToLocalTime().ToString("dd MMM, HH:mm")</small></td><td class="text-end"><strong class="@(item.TransactionType == TransactionType.IN ? "text-success" : "text-danger")">@(item.TransactionType == TransactionType.IN ? "+" : "−")@item.Quantity</strong><small class="d-block muted">balance @item.BalanceAfter</small></td></tr> }</tbody></table></div> }
+    </section>
+</div>

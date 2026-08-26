@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 180" role="img" aria-labelledby="title desc">
+  <title id="title">Product placeholder</title>
+  <desc id="desc">A minimal illustrated warehouse box</desc>
+  <rect width="240" height="180" rx="14" fill="#f1eef6"/>
+  <path d="m66 72 54-30 54 30v57l-54 30-54-30z" fill="#7658a8" opacity=".85"/>
+  <path d="m66 72 54 30 54-30M120 102v57" fill="none" stroke="#fff" stroke-width="5" stroke-linejoin="round"/>
+  <path d="m91 59 54 30" fill="none" stroke="#dcd2ea" stroke-width="4"/>
+</svg>

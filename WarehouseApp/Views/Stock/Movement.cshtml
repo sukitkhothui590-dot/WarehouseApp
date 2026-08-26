@@ -1,0 +1,23 @@
+@model StockMovementViewModel
+@{ var isReceive = (string?)ViewData["MovementType"] == "receive"; ViewData["Title"] = isReceive ? "Receive stock" : "Withdraw stock"; }
+<div class="page-heading"><div><p class="eyebrow">Stock control</p><h2>@ViewData["Title"]</h2><p class="muted">@(isReceive ? "Add incoming units to a product." : "Dispatch units from current inventory.")</p></div><a class="btn btn-light" asp-controller="Inventory" asp-action="Index">Back to inventory</a></div>
+<section class="panel form-panel movement-panel @(isReceive ? "receive-panel" : "withdraw-panel")" data-movement-type="@(isReceive ? "receive" : "withdraw")">
+    <div class="movement-heading"><span class="large-movement-icon">@(isReceive ? "↓" : "↑")</span><div><h3>@(isReceive ? "Record incoming stock" : "Record an outbound movement")</h3><p class="muted">Stock and transaction history are saved atomically.</p></div></div>
+    <div class="movement-layout">
+        <form asp-action="@(isReceive ? "Receive" : "Withdraw")" method="post" data-movement-form>
+            <div asp-validation-summary="ModelOnly" class="text-danger validation-summary"></div>
+            <div class="form-grid">
+                <div class="form-field full-width"><label asp-for="ProductId"></label><select asp-for="ProductId" class="form-select" data-product-select><option value="">Select a product</option>@foreach (var product in Model.Products) { <option value="@product.Id" data-current-quantity="@product.Quantity" data-unit="@product.Unit" data-name="@product.Name" data-code="@product.Code" data-image="@product.ImageFileName" selected="@(Model.ProductId == product.Id)">@product.Code — @product.Name (@product.Quantity @product.Unit)</option> }</select><span asp-validation-for="ProductId" class="text-danger"></span></div>
+                <div class="form-field"><label asp-for="Quantity"></label><input asp-for="Quantity" class="form-control" type="number" min="1" step="1" placeholder="0" data-quantity-input /><span asp-validation-for="Quantity" class="text-danger"></span></div>
+                <div class="form-field"><label asp-for="Note"></label><input asp-for="Note" class="form-control" placeholder="Optional note" maxlength="500" /><span asp-validation-for="Note" class="text-danger"></span></div>
+            </div>
+            <div class="form-actions"><a class="btn btn-light" asp-controller="Inventory" asp-action="Index">Cancel</a><button class="btn @(isReceive ? "btn-success" : "btn-danger")" type="submit" data-movement-submit disabled>@(isReceive ? "Receive stock" : "Withdraw stock")</button></div>
+        </form>
+        <aside class="movement-summary" aria-live="polite">
+            <div class="summary-label">Movement preview</div>
+            <div class="summary-product"><img class="summary-product-image" src="~/images/products/default-product.svg" alt="" data-preview-image /><div><strong data-preview-name>Select a product</strong><small data-preview-code>Product code will appear here</small></div></div>
+            <div class="stock-preview-grid"><div><span>Current stock</span><strong data-preview-current>—</strong></div><div class="preview-arrow">→</div><div><span>After movement</span><strong data-preview-after>—</strong></div></div>
+            <p class="preview-message" data-preview-message>Select a product and quantity to preview the new balance.</p>
+        </aside>
+    </div>
+</section>

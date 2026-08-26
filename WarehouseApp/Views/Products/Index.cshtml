@@ -1,0 +1,57 @@
+@model IReadOnlyList<Product>
+@{ 
+    ViewData["Title"] = "Products";
+    var currentStatus = (string?)ViewData["Status"] ?? "all";
+    var currentSearch = ViewData["Search"]?.ToString();
+}
+<div class="products-toolbar">
+    <div><p class="eyebrow">Inventory catalog</p><h2>Products</h2><p class="toolbar-note">@Model.Count product@(Model.Count == 1 ? "" : "s") in view</p></div>
+    <div class="products-tools">
+        <form class="products-search" method="get">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" /><path d="m16 16 4 4" /></svg>
+            <input type="search" name="search" value="@currentSearch" placeholder="Search product name or code..." aria-label="Search products" />
+        </form>
+        <details class="filter-menu">
+            <summary class="btn btn-light filter-button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10m-7 6h4" /></svg> Filter <span class="filter-indicator @(currentStatus == "all" ? "d-none" : "")"></span></summary>
+            <div class="filter-menu-panel">
+                <span class="filter-menu-title">Stock status</span>
+                <a class="@(currentStatus == "all" ? "selected" : "")" asp-action="Index" asp-route-search="@currentSearch">All products</a>
+                <a class="@(currentStatus == "in-stock" ? "selected" : "")" asp-action="Index" asp-route-search="@currentSearch" asp-route-status="in-stock">In stock</a>
+                <a class="@(currentStatus == "low-stock" ? "selected" : "")" asp-action="Index" asp-route-search="@currentSearch" asp-route-status="low-stock">Low stock</a>
+                <a class="@(currentStatus == "out-of-stock" ? "selected" : "")" asp-action="Index" asp-route-search="@currentSearch" asp-route-status="out-of-stock">Out of stock</a>
+            </div>
+        </details>
+        <a class="btn btn-primary" asp-action="Create">Create new</a>
+    </div>
+</div>
+<div class="page-tabs" role="tablist" aria-label="Product status">
+    <a class="page-tab @(currentStatus == "all" ? "active" : "")" asp-action="Index" asp-route-search="@currentSearch">All products <span class="tab-count">@Model.Count</span></a>
+    <a class="page-tab" asp-controller="Inventory" asp-action="Index">Stock overview</a>
+</div>
+<section class="panel info-card">
+    <div><h3>Bring in your products and stock levels</h3><p>Manage your product catalog here. Create products manually, then use Receive stock to add inventory and keep every movement auditable.</p></div>
+    <a class="btn btn-light" asp-action="Create">Add a product</a>
+</section>
+<section class="panel product-table-panel">
+    <div class="table-responsive">
+        <table class="table app-table align-middle">
+            <thead><tr><th>Product</th><th>Unit</th><th>Available</th><th>Last updated</th><th>Status</th><th></th></tr></thead>
+            <tbody>
+            @foreach (var product in Model)
+            {
+                var status = product.Quantity == 0 ? "Out of stock" : product.Quantity <= 5 ? "Low stock" : "In stock";
+                <tr>
+                    <td><a class="product-cell" asp-action="Details" asp-route-id="@product.Id"><img class="product-thumb" src="~/images/products/@product.ImageFileName" alt="@product.Name" loading="lazy" /><span><strong>@product.Name</strong><small>@product.Code</small></span></a></td>
+                    <td>@product.Unit</td>
+                    <td><strong>@product.Quantity</strong> <span class="muted">@product.Unit</span></td>
+                    <td class="muted">@product.UpdatedAt.ToLocalTime().ToString("dd MMM yyyy, HH:mm")</td>
+                    <td><span class="status-badge @(product.Quantity == 0 ? "out" : product.Quantity <= 5 ? "low" : "in")">@status</span></td>
+                    <td class="row-actions"><a class="table-action" asp-action="Edit" asp-route-id="@product.Id">Edit</a><a asp-action="Details" asp-route-id="@product.Id" title="View details">•••</a></td>
+                </tr>
+            }
+            @if (Model.Count == 0) { <tr><td colspan="6"><div class="empty-state"><strong>No products found</strong><span>Try another search or clear the stock filter.</span><a class="btn btn-light" asp-action="Index">Clear filters</a></div></td></tr> }
+            </tbody>
+        </table>
+    </div>
+    <div class="table-footer"><span>Showing <strong>@Model.Count</strong> products</span><span class="footer-hint">Select a product to view stock movement history</span></div>
+</section>

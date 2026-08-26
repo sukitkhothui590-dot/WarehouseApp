@@ -1,0 +1,67 @@
+@{
+    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+    bool IsActive(string controller, string? action = null) =>
+        string.Equals(currentController, controller, StringComparison.OrdinalIgnoreCase) &&
+        (action is null || string.Equals(currentAction, action, StringComparison.OrdinalIgnoreCase));
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] — WarehouseApp</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/overrides.css" asp-append-version="true" />
+</head>
+<body>
+<div class="app-shell">
+    <aside class="sidebar">
+        <div class="sidebar-top">
+            <button class="mobile-sidebar-toggle" type="button" aria-label="Toggle navigation" data-sidebar-toggle>☰</button>
+            <a class="brand" asp-controller="Home" asp-action="Index">
+                <span class="brand-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 9.5 12 5l7 4.5v8L12 22l-7-4.5z" /><path d="M5 9.5 12 14l7-4.5M12 14v8" /></svg></span>
+                <span>Warehouse<span class="brand-muted">App</span></span>
+            </a>
+        </div>
+        <div class="sidebar-label">Workspace</div>
+        <nav class="sidebar-nav" aria-label="Primary navigation">
+            <a class="nav-link @(IsActive("Home") ? "active" : "")" asp-controller="Home" asp-action="Index"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1" /><rect x="14" y="4" width="6" height="6" rx="1" /><rect x="4" y="14" width="6" height="6" rx="1" /><rect x="14" y="14" width="6" height="6" rx="1" /></svg> Dashboard</a>
+            <a class="nav-link nav-parent @(IsActive("Inventory") ? "active" : "")" asp-controller="Inventory" asp-action="Index"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8.5 12 4l8 4.5v7L12 20l-8-4.5z" /><path d="m4 8.5 8 4.5 8-4.5M12 13v7" /></svg> Inventory <span class="nav-chevron">›</span></a>
+            <div class="nav-subgroup">
+                <a class="nav-link sub-link @(IsActive("Products") ? "active" : "")" asp-controller="Products" asp-action="Index">Products</a>
+                <a class="nav-link sub-link @(IsActive("Stock", "Receive") ? "active" : "")" asp-controller="Stock" asp-action="Receive">Receive stock</a>
+                <a class="nav-link sub-link @(IsActive("Stock", "Withdraw") ? "active" : "")" asp-controller="Stock" asp-action="Withdraw">Withdraw stock</a>
+                <a class="nav-link sub-link @(IsActive("Transactions") ? "active" : "")" asp-controller="Transactions" asp-action="Index">Transactions</a>
+            </div>
+            <a class="nav-link" asp-controller="Products" asp-action="Create"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h10l4 4v12H5z" /><path d="M15 4v5h4M8 14h8M12 10v8" /></svg> Add product</a>
+        </nav>
+        <div class="sidebar-footer">
+            <div class="system-status"><span class="status-dot"></span><span>System operational</span></div>
+            <div class="sidebar-profile"><span class="profile-avatar">KM</span><span><strong>Katie Manager</strong><small>Administrator</small></span><span class="profile-more">···</span></div>
+        </div>
+    </aside>
+    <div class="main-area">
+        <header class="topbar">
+            <form class="topbar-search" asp-controller="Products" asp-action="Index" method="get">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" /><path d="m16 16 4 4" /></svg>
+                <input type="search" name="search" value='@Context.Request.Query["search"]' placeholder="Search products..." aria-label="Search products" />
+            </form>
+            <div class="topbar-actions"><a class="icon-button" asp-controller="Transactions" asp-action="Index" title="View transaction history" aria-label="View transaction history">?</a><a class="icon-button notification" asp-controller="Transactions" asp-action="Index" title="View transactions" aria-label="View transactions"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4" /></svg><span></span></a><div class="top-profile"><span class="profile-avatar">KM</span><span><strong>Katie Manager</strong><small>Admin</small></span></div></div>
+        </header>
+        <main class="content">
+            @if (TempData["Success"] is string success) { <div class="alert alert-success app-alert" data-dismissible>✓ @success <button type="button" aria-label="Dismiss" data-dismiss-alert>×</button></div> }
+            @if (TempData["Error"] is string error) { <div class="alert alert-danger app-alert" data-dismissible>! @error <button type="button" aria-label="Dismiss" data-dismiss-alert>×</button></div> }
+            @RenderBody()
+        </main>
+    </div>
+</div>
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+<script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
